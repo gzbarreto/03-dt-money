@@ -23,6 +23,14 @@
       "type": "outcome",
       "category": "Casa",
       "createdAt": "2025-08-30T20:40:19.197Z"
+    },
+    {
+      "id": 4,
+      "description": "Almoço",
+      "price": 45.7,
+      "type": "outcome",
+      "category": "Alimentação",
+      "createdAt": "2025-08-30T20:40:19.197Z"
     }
   ]
 }
