@@ -31,6 +31,30 @@
       "type": "outcome",
       "category": "Alimentação",
       "createdAt": "2025-08-30T20:40:19.197Z"
+    },
+    {
+      "description": "Projeto",
+      "category": "Venda",
+      "price": 10000,
+      "type": "income",
+      "createdAt": "2025-08-31T10:55:20.537Z",
+      "id": 5
+    },
+    {
+      "description": "exemplo",
+      "category": "a",
+      "price": 111,
+      "type": "outcome",
+      "createdAt": "2025-08-31T10:56:28.153Z",
+      "id": 6
+    },
+    {
+      "description": "Internet",
+      "category": "Casa",
+      "price": 178,
+      "type": "outcome",
+      "createdAt": "2025-08-31T11:06:36.132Z",
+      "id": 7
     }
   ]
 }

@@ -11,6 +11,8 @@ import {
   TransactionTypeButton,
 } from "./styles"
 import { ArrowCircleDown, ArrowCircleUp, X } from "phosphor-react"
+import { TransactionContext } from "../../contexts/TransactionContext"
+import { useContext } from "react"
 
 const newTransactionFormSchema = z.object({
   description: z.string(),
@@ -22,8 +24,11 @@ const newTransactionFormSchema = z.object({
 type NewTransactionFormInputs = z.infer<typeof newTransactionFormSchema>
 
 export function NewTransactionModal() {
+const {createTransaction} = useContext(TransactionContext)
+
   const {
     control,
+    reset,
     register,
     handleSubmit,
     formState: { isSubmitting },
@@ -35,8 +40,8 @@ export function NewTransactionModal() {
   })
 
   async function handleCreateNewTransaction(data: NewTransactionFormInputs) {
-    await new Promise((resolve) => setTimeout(resolve, 2000)) //simula uma requisição
-    console.log(data)
+    await createTransaction(data)
+    reset()
   }
 
   return (
@@ -72,9 +77,12 @@ export function NewTransactionModal() {
           <Controller
             control={control}
             name="type"
-            render={({field}) => {
+            render={({ field }) => {
               return (
-                <TransactionType onValueChange={field.onChange} value={field.value}>
+                <TransactionType
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
                   <TransactionTypeButton variant="income" value="income">
                     <ArrowCircleUp size={24} />
                     Entrada
