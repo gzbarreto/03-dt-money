@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react"
+import { api } from "../lib/axios"
 
 interface Transaction {
   id: number
@@ -11,6 +12,7 @@ interface Transaction {
 
 interface TransactionContextType {
   transactions: Transaction[]
+  fetchTransactions: (query?: string) => Promise<void>
 }
 
 interface TransactionProviderProps {
@@ -22,14 +24,14 @@ export const TransactionContext = createContext({} as TransactionContextType)
 export function TransactionProvider({ children }: TransactionProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
 
-  async function fetchTransactions() {
-    //fetch é uma API nativa do JavaScript para fazer requisições HTTP
-    //await espera a resposta da requisição antes de continuar a execução do código
-    //fetch retorna uma Promise, por isso usamos o await
-    //o fetch por padrão faz uma requisição GET
-    const response = await fetch("http://localhost:3333/transactions")
-    const data = await response.json()
-    setTransactions(data)
+  async function fetchTransactions(query?: string) {
+    const response = await api.get("transactions", {
+      params: {
+        q: query,
+      },
+    })
+    console.log("fetching:", response.data)
+    setTransactions(response.data)
   }
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
   }, []) //ao passar um array vazio, o useEffect só é executado uma vez, quando o componente é montado na tela
 
   return (
-    <TransactionContext.Provider value={{ transactions }}>
+    <TransactionContext.Provider value={{ transactions, fetchTransactions }}>
       {children}
     </TransactionContext.Provider>
   )
