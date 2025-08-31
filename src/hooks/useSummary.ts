@@ -1,8 +1,10 @@
-import { useContext } from "react"
 import { TransactionContext } from "../contexts/TransactionContext"
+import { useContextSelector } from "use-context-selector"
 
 export function useSummary() {
-  const { transactions } = useContext(TransactionContext)
+  const transactions = useContextSelector(TransactionContext, (context) => {
+    return context.transactions
+  })
 
   //reduce reduz um array a uma outra estrutura de dados
   //aqui, uma transaction se torna um objeto {income: number, outcome: number, total: number}

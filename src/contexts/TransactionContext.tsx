@@ -1,4 +1,5 @@
-import { createContext, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { createContext } from "use-context-selector"
 import { api } from "../lib/axios"
 
 interface Transaction {
@@ -30,8 +31,10 @@ export const TransactionContext = createContext({} as TransactionContextType)
 
 export function TransactionProvider({ children }: TransactionProviderProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
-
-  async function fetchTransactions(query?: string) {
+  
+  //useCallback garante que a função não seja recriada a cada renderização do componente
+  //o array de dependencias indica quando a função deve ser recriada
+  const fetchTransactions = useCallback(async (query?: string) => {
     const response = await api.get("transactions", {
       params: {
         _sort: "createdAt",
@@ -41,26 +44,31 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
     })
     console.log("fetching:", response.data)
     setTransactions(response.data)
-  }
-
-  async function createTransaction(data: CreateTransactionInput) {
-    const { description, category, price, type } = data
-    const response = await api.post("/transactions", {
-      description,
-      category,
-      price,
-      type,
-      createdAt: new Date(),
-    })
-    setTransactions((state) => [response.data, ...state])
-  }
+  }, [])
+  
+  const createTransaction = useCallback(
+    async (data: CreateTransactionInput) => {
+      const { description, category, price, type } = data
+      const response = await api.post("/transactions", {
+        description,
+        category,
+        price,
+        type,
+        createdAt: new Date(),
+      })
+      setTransactions((state) => [response.data, ...state])
+    },
+    []
+  )
 
   useEffect(() => {
     fetchTransactions()
   }, []) //ao passar um array vazio, o useEffect só é executado uma vez, quando o componente é montado na tela
 
   return (
-    <TransactionContext.Provider value={{ transactions, fetchTransactions, createTransaction }}>
+    <TransactionContext.Provider
+      value={{ transactions, fetchTransactions, createTransaction }}
+    >
       {children}
     </TransactionContext.Provider>
   )
