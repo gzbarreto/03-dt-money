@@ -63,7 +63,7 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
 
   useEffect(() => {
     fetchTransactions()
-  }, []) //ao passar um array vazio, o useEffect só é executado uma vez, quando o componente é montado na tela
+  }, [fetchTransactions]) //ao passar um array vazio, o useEffect só é executado uma vez, quando o componente é montado na tela
 
   return (
     <TransactionContext.Provider
